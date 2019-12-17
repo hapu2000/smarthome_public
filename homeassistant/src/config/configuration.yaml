@@ -1,0 +1,44 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+# http:
+#   base_url: example.duckdns.org:8123
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+
+homeassistant:
+  packages:
+    zigbee2mqtt: !include zigbee2mqtt.yaml
+
+python_script:
+
+#scene: !include scenes.yaml
+#
+logger:
+  default: critical
+  logs:
+    homeassistant.components.http.ban: warning
+
+recorder:
+  db_url: !env_var DB_URL
+  purge_keep_days: 2
+
+http:
+  server_port: !env_var HA_PORT
+  base_url: !env_var BASE_URL
+  ssl_certificate: /config/ssl/etc/letsencrypt/live/hapu2000.duckdns.org/fullchain.pem
+  ssl_key: /config/ssl/etc/letsencrypt/live/hapu2000.duckdns.org/privkey.pem
+
+mqtt:
+  broker: localhost
+  username: !env_var MQTT_USER
+  password: !env_var MQTT_PASS
+

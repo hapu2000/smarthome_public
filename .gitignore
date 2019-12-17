@@ -1,0 +1,11 @@
+*.db
+*.swp
+*.log
+.env
+.HA_VERSION
+.ios.conf
+homeassistant/src/config/.storage
+homeassistant/src/config/ssl
+postgres/data/*
+zigbee2mqtt/data/log
+zigbee2mqtt/data/state.json

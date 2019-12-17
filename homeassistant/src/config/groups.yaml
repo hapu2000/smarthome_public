@@ -1,0 +1,19 @@
+sprinkler_auto:
+  name: Auto Sprinkler
+  entities: 
+    - switch.vorgarten_automatic_watering
+    - switch.vordach_automatic_watering
+    - switch.terrasse_automatic_watering
+    - switch.spielplatz_automatic_watering
+sprinkler_manual:
+  name: Manuell Sprinkler
+  entities: 
+    - switch.vorgarten_manual_watering
+    - switch.vordach_manual_watering
+    - switch.terrasse_manual_watering
+    - switch.spielplatz_manual_watering
+family:
+  name: Familie
+  entities:
+    - device_tracker.9c_e6_5e_37_cd_d3
+    - device_tracker.c4_61_8b_13_4d_c2

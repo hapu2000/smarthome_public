@@ -1,0 +1,15 @@
+fade:
+  description: Light Fader by Transition Time
+  fields:
+    entity_id:
+      description: The light that will be fade. (required)
+      example: light.your_light_name
+    start_level_pct:
+      description: Assumes current brightness if omitted (optional)
+      example: 0
+    end_level_pct:
+      description: Finall brightness (required)
+      example: 100
+    transition:
+      description: Transistion time hh:mm:ss (required)
+      example: 00:00:19

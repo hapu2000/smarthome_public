@@ -1,0 +1,4 @@
+# admin darf alles
+user MQTT_USER
+topic readwrite #
+topic readwrite $SYS/#

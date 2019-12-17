@@ -1,0 +1,93 @@
+version: '3'
+services:
+  mosquitto:
+    container_name: mosquitto
+    build:
+      context: ./mosquitto
+      args:
+        - MQTT_USER
+        - MQTT_PASS
+    restart: always
+    ports:
+      - 1883:1883
+  letsencrypt:
+    image: linuxserver/letsencrypt
+    container_name: letsencrypt
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - URL=${URL}
+      - SUBDOMAINS=
+      - VALIDATION=http
+      - DUCKDNSTOKEN=${DUCKDNSTOKEN}
+      - EMAIL=${EMAIL} #optional
+      - DHLEVEL=2048 #optional
+      - ONLY_SUBDOMAINS=false #optional
+      - STAGING=false #optional
+    volumes:
+      - ./homeassistant/src/config/ssl:/config
+    ports:
+#      - 443:443
+      - 80:80 #optional
+    restart: unless-stopped
+  duckdns:
+    image: linuxserver/duckdns
+    container_name: duckdns
+    environment:
+      - PUID=1000 #optional
+      - PGID=1000 #optional
+      - TZ=Europe/Berlin
+      - SUBDOMAINS=${URL}
+      - TOKEN=${DUCKDNSTOKEN}
+      - LOG_FILE=false #optional
+#    volumes:
+#      - /path/to/appdata/config:/config #optional
+    restart: unless-stopped
+  homeassistant:
+    container_name: home-assistant
+    build: ./homeassistant
+    volumes:
+      - ./homeassistant/src/config:/config
+    tmpfs: /tmpfs:size=512M
+    environment:
+      - PUID=1000 #optional
+      - PGID=1000 #optional
+      - TZ=Europe/Berlin
+      - URL=${URL}
+      - BASE_URL=https://${URL}:${HA_PORT}
+      - HA_PORT=${HA_PORT}
+      - DB_URL=sqlite:////tmpfs/home-assistant_v2.db
+      - MQTT_USER=${MQTT_USER}
+      - MQTT_PASS=${MQTT_PASS}
+    restart: always
+    network_mode: host
+#    ports:
+#      - "8433:8433"
+#      - "8123:8123"
+    depends_on:
+      - mosquitto
+      - letsencrypt
+      - duckdns
+  zigbee2mqtt:
+    container_name: zigbee2mqtt
+    #image: koenkk/zigbee2mqtt:arm32v6
+    build:
+      context: ./zigbee2mqtt
+      args:
+        - MQTT_USER
+        - MQTT_PASS
+    volumes:
+      - ./zigbee2mqtt/data:/app/data
+    devices:
+      - /dev/ttyACM0:/dev/ttyACM0
+    restart: always
+    network_mode: host
+    environment:
+      - TZ=Europe/Berlin
+      - MQTT_USER=${MQTT_USER}
+      - MQTT_PASS=${MQTT_PASS}
+    depends_on:
+      - homeassistant

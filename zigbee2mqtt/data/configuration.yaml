@@ -1,0 +1,15 @@
+homeassistant: true
+permit_join: false
+mqtt:
+  base_topic: zigbee2mqtt
+  server: 'mqtt://localhost:1883'
+  user: MQTT_USER
+  password: MQTT_PASS
+  include_device_information: false
+serial:
+  port: /dev/ttyACM0
+  disable_led: true
+queue:
+  delay: 250
+  simultaneously: 5
+device_options: null
