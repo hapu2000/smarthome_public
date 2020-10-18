@@ -1,9 +1,7 @@
-FROM alpine:latest
-RUN apk add mosquitto
+FROM alpine:3.12
+RUN apk add --no-cache mosquitto gettext
 COPY src/etc/mosquitto /etc/mosquitto
-ARG MQTT_USER
-ARG MQTT_PASS
-RUN /usr/bin/mosquitto_passwd -b /etc/mosquitto/conf.d/passwd ${MQTT_USER} ${MQTT_PASS}
-RUN sed -i -e "s/MQTT_USER/${MQTT_USER}/" /etc/mosquitto/conf.d/acl
-CMD /usr/sbin/mosquitto -c /etc/mosquitto/mosquitto.conf
+COPY ./docker-entrypoint.sh /
 EXPOSE 1883
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["/usr/sbin/mosquitto", "-c", "/etc/mosquitto/mosquitto.conf"]
