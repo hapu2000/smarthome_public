@@ -4,9 +4,9 @@ services:
     container_name: mosquitto
     build:
       context: ./mosquitto
-      args:
-        - MQTT_USER
-        - MQTT_PASS
+    environment:
+      MQTT_USER: ${MQTT_USER}
+      MQTT_PASS: ${MQTT_PASS}
     restart: always
     ports:
       - 1883:1883
